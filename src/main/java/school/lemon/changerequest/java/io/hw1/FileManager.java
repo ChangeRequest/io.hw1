@@ -80,6 +80,7 @@ public class FileManager implements IFileManager {
         File file = new File(name);
         if (file.exists()) throw new FileAlreadyExistException(file);
            file.createNewFile();
+            System.out.println("File has been created.");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,7 +91,7 @@ public class FileManager implements IFileManager {
         File directory = new File(name);
         if (directory.exists() && directory.isDirectory()) throw new DirectoryAlreadyExistException(directory);
         try {
-            if (directory.mkdir()) System.out.println("Directory has been created" + directory.getAbsolutePath());
+            if (directory.mkdir()) System.out.println("Directory has been created. " + directory.getAbsolutePath());
         } catch (FileManagerException e) {
             e.printStackTrace();
         }
@@ -101,6 +102,7 @@ public class FileManager implements IFileManager {
       File newCurrentDirectory = new File(name).getAbsoluteFile();
         if (!newCurrentDirectory.exists() || !newCurrentDirectory.isDirectory()) throw new IllegalDirectoryException(newCurrentDirectory);
         currentDirectory = newCurrentDirectory;
+        System.out.println("Current directory has been changed.");
     }
 
     @Override
@@ -141,6 +143,7 @@ public class FileManager implements IFileManager {
         try {
             if (copyMode.equals(CopyMode.SIMPLE)){
                 Files.copy(fileSource.toPath(), fileDest.toPath());
+                System.out.println("Copied successfully.");
         } else {
             InputStream is = null;
             OutputStream os = null;
@@ -151,6 +154,7 @@ public class FileManager implements IFileManager {
                 while ((length = is.read(buffer)) > 0) {
                     os.write(buffer, 0, length);
                 }
+                System.out.println("Copied successfully.");
             }
         }
         catch (FileCopyException e) {
