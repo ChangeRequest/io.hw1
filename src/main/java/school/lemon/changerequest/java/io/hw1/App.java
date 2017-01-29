@@ -42,23 +42,23 @@ public class App {
         manager.changeDirectory("nonExistentDirectory");
 
         System.out.println("Try to copy directory.");
-        manager.copy("test","testCopy" , CopyMode.SIMPLE);
+        manager.copy("test", "testCopy", CopyMode.SIMPLE);
 
         System.out.println("Try to copy non-existent file.");
-        manager.copy("nonExistentFile","fileCopy" , CopyMode.SIMPLE);
+        manager.copy("nonExistentFile", "fileCopy", CopyMode.SIMPLE);
 
         System.out.println("Try to copy into file, that already exist.");
-        manager.copy("LICENSE","newFile" , CopyMode.SIMPLE);
+        manager.copy("LICENSE", "newFile", CopyMode.SIMPLE);
 
-        manager.copy("LICENSE","fileTo" , CopyMode.SIMPLE);
+        manager.copy("LICENSE", "fileTo", CopyMode.SIMPLE);
 
-        manager.copy("fileTo","fileCOPY" , CopyMode.BUFFERED);
+        manager.copy("fileTo", "fileCOPY", CopyMode.BUFFERED);
 
         manager.changeDirectory("test");
         System.out.println(manager.currentDirectory());
 
-       System.out.println(manager.delete("fileCopy", false));
-       System.out.println(manager.delete("test", true));
+        System.out.println(manager.delete("fileCopy", false));
+        System.out.println(manager.delete("test", true));
 
         System.out.println("Try to delete directory, that not empty");
         System.out.println(manager.delete("build", false));
