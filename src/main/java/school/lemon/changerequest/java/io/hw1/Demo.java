@@ -1,96 +1,122 @@
 package school.lemon.changerequest.java.io.hw1;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 
 public class Demo {
+
     public static void main(String[] args) {
-        String str = "D:\\newFolder";
-        File fileCreate = new File(str);
-        fileCreate.mkdir();
+        StringBuilder sb = new StringBuilder();
+        sb.append("src");
+        sb.append(File.separator);
+        sb.append("test");
+        sb.append(File.separator);
+        sb.append("java");
+        sb.append(File.separator);
+        sb.append("school");
+        sb.append(File.separator);
+        sb.append("lemon");
+        sb.append(File.separator);
+        sb.append("changerequest");
+        sb.append(File.separator);
+        sb.append("java");
+        sb.append(File.separator);
+        sb.append("io");
+        sb.append(File.separator);
+        sb.append("hw1");
+        sb.append(File.separator);
+        sb.append("testFolder");
+        String str = sb.toString();
+        String tmp = "";
+        File folderCreate = new File(str);
+
+        if (!folderCreate.exists()) {
+            folderCreate.mkdir();
+        }
         IFileManager iFileManager = new IFileManagerImp(str);
-        String tmp = null;
+
 
         for (char iI = 'a'; iI <= 'c'; iI++) {
-            tmp = str + "\\" + iI + ".txt";
-            iFileManager.createFile(tmp);
-            System.out.println("File created!");
-        }
+            tmp = str + File.separator + iI + ".txt";
+            File fileCreate = new File(tmp);
+            if (!fileCreate.exists()) {
+                iFileManager.createFile(tmp);
 
+            } else System.out.println(iI + ".txt Already exists!");
+        }
         for (char iI = 'c'; iI >= 'a'; iI--) {
-            tmp = str + "\\" + iI + "\\";
-            iFileManager.createDirectory(tmp);
-            System.out.println("Directory  created!");
+
+            tmp = str + File.separator + iI + File.separator;
+            File fileCreate = new File(tmp);
+            if (!fileCreate.exists()) {
+
+                iFileManager.createDirectory(tmp);
+
+            } else System.out.println(File.separator + iI + File.separator + "Already exists!");
         }
-
+        FileFilter fileFilter = new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+                return pathname.isDirectory();
+            }
+        };
         System.out.println("________________________________________");
-        System.out.println(iFileManager.ls(Order.BY_LEXICOGRAPHICAL_ASCENDING));
-
+        System.out.println(iFileManager.ls(Order.BY_LEXICOGRAPHICAL_ASCENDING, true));
         System.out.println("________________________________________");
-        System.out.println(iFileManager.ls(Order.BY_LEXICOGRAPHICAL_DESCENDING, false));
-
-        System.out.println("________________________________________");
-        System.out.println(iFileManager.ls(Order.BY_LAST_UPDATE_ASCENDING, false));
-
-        System.out.println("________________________________________");
-        System.out.println(iFileManager.ls(Order.BY_LAST_UPDATE_DESCENDING));
-
-        System.out.println("________________________________________");
-        File testFile = new File("D:\\newFolder\\a");
-        File testFile2 = new File("D:\\newFolder\\a.txt");
-        System.out.println(iFileManager.fileInfo(testFile));
-
-        System.out.println("________________________________________");
-        System.out.println(iFileManager.fileInfo(testFile2));
-
-        System.out.println("________________________________________");
-        try {
-            File file = new File("D:\\newFolder\\a.txt");
-            FileWriter fw = new FileWriter(file);
-            fw.write("Text just for Demo");
-            fw.close();
-            System.out.println("Changes in a.txt done");
-        } catch (IOException n) {
-        }
-        try {
-            iFileManager.copy("D:\\newFolder\\a.txt", "D:\\newFolder\\aCopy.txt");
-            System.out.println("Copied");
-        } catch (FileNotFoundException n) {
-        }
-
-        System.out.println(iFileManager.fileInfo(testFile2));
-
-        System.out.println("________________________________________");
-        String str2 = "D:\\newFolder\\a";
-        iFileManager.changeDirectory(str2);
+        System.out.println(iFileManager.ls(Order.BY_LEXICOGRAPHICAL_DESCENDING, true));
+        str = sb.toString()+ File.separator+"a";
+        iFileManager.changeDirectory(str);
         for (char iI = 'a'; iI <= 'c'; iI++) {
-            tmp = str2 + "\\" + iI + ".txt";
-            iFileManager.createFile(tmp);
+            tmp = str + File.separator + iI + ".txt";
+            File fileCreate = new File(tmp);
+            if (!fileCreate.exists()) {
+                iFileManager.createFile(tmp);
+
+            } else System.out.println(iI + ".txt Already exists!");
         }
-        System.out.println("________________________________________");
+        str = sb.toString()+File.separator+"b";
+//Change Directory+create some more files
+        for (char iI = 'a'; iI <= 'c'; iI++) {
+            tmp = str + File.separator + iI + ".txt";
+            File fileCreate = new File(tmp);
+            if (!fileCreate.exists()) {
+                iFileManager.createFile(tmp);
+
+            } else System.out.println(iI + ".txt Already exists!");
+        }
+        iFileManager.changeDirectory(str);
+
         try {
-            iFileManager.delete("D:\\newFolder\\a\\a.txt");
-            iFileManager.delete("D:\\newFolder\\a\\b.txt");
-            iFileManager.delete("D:\\newFolder\\a\\c.txt");
-            System.out.println("Files Deleted");
-        } catch (FileNotFoundException n) {
-        }
-        System.out.println("________________________________________");
+            // try toDelete not empty folder;
+            System.out.println(iFileManager.delete(str));
+            System.out.println(iFileManager.delete(str, true));
+        }catch (FileNotFoundException n){}
+
+        String source=sb.toString()+File.separator+"a.txt";
+        String dest=sb.toString()+File.separator+"d.txt";
+        String dest2=sb.toString()+File.separator+"f.txt";
+        //add some text to a.txt
         try {
-            iFileManager.delete("D:\\newFolder\\c");
-            System.out.println("Folder c Deleted");
-        } catch (FileNotFoundException n) {
-        }
+    BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(source));
+bufferedWriter.write("Some Text");
+ bufferedWriter.flush();
+}catch (IOException io){
+    System.out.println(io.getMessage());
+}
+try {
+    //Copy 2 ways
+
+    iFileManager.copy(source,dest);
+    iFileManager.copy(source,dest2,CopyMode.BUFFERED);
+}catch (FileNotFoundException fnf){}
+
+
+
+
     }
 
 
 }
-
-
-
 
 
 
